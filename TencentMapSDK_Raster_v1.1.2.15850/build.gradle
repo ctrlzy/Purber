@@ -1,0 +1,2 @@
+configurations.create("default")
+artifacts.add("default", file('TencentMapSDK_Raster_v1.1.2.15850.jar'))
