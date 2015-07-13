@@ -16,6 +16,8 @@ public class OrderDto {
     private LocationDto loc;
     
     private ServiceDto service;
+
+    private int version;
     
     
     public OrderDto() {
@@ -71,7 +73,20 @@ public class OrderDto {
 
     public void setService(ServiceDto service) {
         this.service = service;
-    } 
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    public void updateVesion()
+    {
+        this.version++;
+    }
     
     
     
