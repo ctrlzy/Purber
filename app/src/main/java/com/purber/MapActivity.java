@@ -8,10 +8,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.EditText;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.purber.rest.dto.LocationDto;
 import com.purber.rest.dto.OrderDto;
 import com.purber.www.purber.R;
@@ -20,33 +19,20 @@ import com.tencent.map.geolocation.TencentLocationListener;
 import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
 import com.tencent.mapsdk.raster.model.CircleOptions;
-import com.tencent.mapsdk.raster.model.GeoPoint;
 import com.tencent.mapsdk.raster.model.LatLng;
-import com.tencent.tencentmap.mapsdk.map.MapController;
 import com.tencent.tencentmap.mapsdk.map.MapView;
 import com.tencent.tencentmap.mapsdk.map.TencentMap;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONStringer;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 public class MapActivity extends Activity implements TencentLocationListener, AsyncResponse {
 
@@ -136,7 +122,7 @@ public class MapActivity extends Activity implements TencentLocationListener, As
             //address += ", latitude: " + String.valueOf(latitude) + ", longitude: " + String.valueOf(longitude);
             Log.d("address", address);
             latLng = new LatLng(latitude, longitude);
-            latLng = new LatLng(30.547209, 104.070028);   //hardcode to CD
+            //latLng = new LatLng(30.547209, 104.070028);   //hardcode to CD
             giveAddress(address, latLng);
 
             //remove listener
@@ -186,47 +172,33 @@ public class MapActivity extends Activity implements TencentLocationListener, As
     {
         //"http://localhost/purber_server/rest/v1/orders/"
 
-        Gson gson = new Gson();
-        String jsonOrder = gson.toJson(order);
+        //Gson gson = new Gson();
+        //String jsonOrder = gson.toJson(order);
         SendRequestTask task = new SendRequestTask();
         task.delegate = this;
-        task.execute(jsonOrder);
+        task.execute(order);
     }
 }
 
-class SendRequestTask extends AsyncTask<String, Void, String>
+class SendRequestTask extends AsyncTask<OrderDto, Void, String>
 {
     public AsyncResponse delegate = null;
-    protected String doInBackground(String... jsonOrders)
+
+
+    @Override
+    protected String doInBackground(OrderDto... order)
     {
-        HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost("http://localhost/purber_server/rest/v1/orders/");
-        String error = null;
-        try
-        {
-            List<NameValuePair> list = new ArrayList<NameValuePair>(1);
-            list.add(new BasicNameValuePair("order", jsonOrders[0]));
-            post.setEntity(new UrlEncodedFormEntity(list));
-            HttpResponse response = client.execute(post);
-            HttpEntity entity = response.getEntity();
-            if (entity != null)
-            {
-                InputStream is = entity.getContent();
-                String result = readIt(is, 500);
-                return result;
-            }
-        }
-        catch (ClientProtocolException pe)
-        {
-            Log.d("Protocol Exception", pe.getMessage());
-            error = pe.getMessage();
-        }
-        catch (IOException e)
-        {
-            Log.d("IOException", e.getMessage());
-            error = e.getMessage();
-        }
-        return error;
+        Client restClient = ClientBuilder.newClient().register(JacksonJsonProvider.class);
+        //restClient.register();
+        String serverUri = "http://ec2-52-25-111-253.us-west-2.compute.amazonaws.com:8080/purber_server/rest/";
+
+        final Response response = restClient.target(serverUri).path("v1/orders").
+                request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(order[0], MediaType.APPLICATION_JSON_TYPE));
+
+        OrderDto returnOrder = response.readEntity(OrderDto.class);
+
+        String result = "Get oid=" + returnOrder.getId()+ ",status="+ returnOrder.getStatus();
+        return result;
     }
 
     @Override
@@ -236,7 +208,7 @@ class SendRequestTask extends AsyncTask<String, Void, String>
     }
 
     // Reads an InputStream and converts it to a String.
-    public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
+    public String readIt(InputStream stream, int len) throws IOException {
         Reader reader = null;
         reader = new InputStreamReader(stream, "UTF-8");
         char[] buffer = new char[len];
