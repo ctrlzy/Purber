@@ -3,4 +3,32 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_client_form">ClientFormActivity</string>
+    <string-array name="brands">
+        <item>Media</item>
+        <item>Gree</item>
+        <item>Aux</item>
+        <item>Chigo</item>
+    </string-array>
+    <string-array name="Media">
+        <item>Media 1</item>
+        <item>Media 2</item>
+        <item>Media 3</item>
+        <item>Media 4</item>
+    </string-array>
+    <string-array name="Gree">
+        <item>Gree 1</item>
+        <item>Gree 2</item>
+        <item>Gree 3</item>
+    </string-array>
+    <string-array name="Aux">
+        <item>Aux 1</item>
+        <item>Aux 2</item>
+        <item>Aux 3</item>
+    </string-array>
+    <string-array name="Chigo">
+        <item>Chigo 1</item>
+        <item>Chigo 2</item>
+        <item>Chigo 3</item>
+    </string-array>
 </resources>
