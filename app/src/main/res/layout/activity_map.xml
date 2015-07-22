@@ -4,39 +4,38 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MapActivity">
-    <com.tencent.tencentmap.mapsdk.map.MapView
-        android:id="@+id/mapView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/uiLayout"
-        android:layout_gravity="center">
-
-        <EditText
-            android:layout_width="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <com.tencent.tencentmap.mapsdk.map.MapView
+            android:id="@+id/mapView"
+            android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:id="@+id/editText"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:hint="Address goes here"
-            android:text="" />
+            android:layout_weight=".70"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:text="我要维修"
-            android:id="@+id/btnFix"
-            android:layout_gravity="center_vertical"
-            android:onClick="sendRepairRequest"
-            android:layout_weight="1" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/uiLayout"
+            android:layout_gravity="center">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="我要维修"
+                android:id="@+id/btnFix"
+                android:layout_gravity="center_vertical"
+                android:onClick="sendRepairRequest" />
+        </LinearLayout>
     </LinearLayout>
+
+
+
 
 </RelativeLayout>

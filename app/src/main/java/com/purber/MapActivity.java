@@ -55,8 +55,8 @@ public class MapActivity extends Activity implements TencentLocationListener, As
 
     public void onResult(String result)
     {
-        EditText text = (EditText)findViewById(R.id.editText);
-        text.setText(result);
+//        EditText text = (EditText)findViewById(R.id.editText);
+//        text.setText(result);
     }
 
     @Override
@@ -143,9 +143,9 @@ public class MapActivity extends Activity implements TencentLocationListener, As
 
     private void giveAddress(String address, LatLng latlng)
     {
-        EditText text = (EditText)findViewById(R.id.editText);
+        //EditText text = (EditText)findViewById(R.id.editText);
         //address += ", latitude: " + String.valueOf(latlng.getLatitude()) + ", longitude: " + String.valueOf(latlng.getLongitude());
-        text.setText(address);
+        //text.setText(address);
 
         TencentMap map = mapView.getMap();
         CircleOptions circle = new CircleOptions().center(latlng);
