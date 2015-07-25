@@ -10,9 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-import com.purber.rest.dto.LocationDto;
-import com.purber.rest.dto.OrderDto;
+import com.purber.controllers.ActivityLauncher;
+import com.purber.ui.ClientFormActivity;
 import com.purber.www.purber.R;
 import com.tencent.map.geolocation.TencentLocation;
 import com.tencent.map.geolocation.TencentLocationListener;
@@ -23,18 +22,7 @@ import com.tencent.mapsdk.raster.model.LatLng;
 import com.tencent.tencentmap.mapsdk.map.MapView;
 import com.tencent.tencentmap.mapsdk.map.TencentMap;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-public class MapActivity extends Activity implements TencentLocationListener, AsyncResponse {
+public class MapActivity extends Activity implements TencentLocationListener {
 
     MapView mapView;
     LatLng latLng;
@@ -50,13 +38,8 @@ public class MapActivity extends Activity implements TencentLocationListener, As
         TencentLocationRequest request = TencentLocationRequest.create();
         request.setRequestLevel(TencentLocationRequest.REQUEST_LEVEL_GEO);
         int result = TencentLocationManager.getInstance(getApplicationContext()).requestLocationUpdates(request, this);
-        //Log.d("result", String.valueOf(result));
-    }
 
-    public void onResult(String result)
-    {
-//        EditText text = (EditText)findViewById(R.id.editText);
-//        text.setText(result);
+        findViewById(R.id.btnFix).setClickable(false);
     }
 
     @Override
@@ -128,6 +111,8 @@ public class MapActivity extends Activity implements TencentLocationListener, As
             //remove listener
             TencentLocationManager locationManager = TencentLocationManager.getInstance(getApplicationContext());
             locationManager.removeUpdates(this);
+
+            findViewById(R.id.btnFix).setClickable(true);
         }
         else
         {
@@ -158,61 +143,9 @@ public class MapActivity extends Activity implements TencentLocationListener, As
 
     public void sendRepairRequest(View view)
     {
-        OrderDto order = new OrderDto();
-        order.setLoc(new LocationDto().setLatitude(latLng.getLatitude()).setLongitude(latLng.getLongitude()));
-        order.setId(0);
-        order.setStatus(0);
-        order.setCustomer_id(1);
-
-        String result = "";
-        send(order);
-    }
-
-    private void send(OrderDto order)
-    {
-        //"http://localhost/purber_server/rest/v1/orders/"
-
-        //Gson gson = new Gson();
-        //String jsonOrder = gson.toJson(order);
-        SendRequestTask task = new SendRequestTask();
-        task.delegate = this;
-        task.execute(order);
-    }
-}
-
-class SendRequestTask extends AsyncTask<OrderDto, Void, String>
-{
-    public AsyncResponse delegate = null;
-
-
-    @Override
-    protected String doInBackground(OrderDto... order)
-    {
-        Client restClient = ClientBuilder.newClient().register(JacksonJsonProvider.class);
-        //restClient.register();
-        String serverUri = "http://ec2-52-25-111-253.us-west-2.compute.amazonaws.com:8080/purber_server/rest/";
-
-        final Response response = restClient.target(serverUri).path("v1/orders").
-                request(MediaType.APPLICATION_JSON_TYPE).post(Entity.entity(order[0], MediaType.APPLICATION_JSON_TYPE));
-
-        OrderDto returnOrder = response.readEntity(OrderDto.class);
-
-        String result = "Get oid=" + returnOrder.getId()+ ",status="+ returnOrder.getStatus();
-        return result;
-    }
-
-    @Override
-    protected void onPostExecute(String result)
-    {
-        delegate.onResult(result);
-    }
-
-    // Reads an InputStream and converts it to a String.
-    public String readIt(InputStream stream, int len) throws IOException {
-        Reader reader = null;
-        reader = new InputStreamReader(stream, "UTF-8");
-        char[] buffer = new char[len];
-        reader.read(buffer);
-        return new String(buffer);
+        double[] array = new double[2];
+        array[0] = latLng.getLatitude();
+        array[1] = latLng.getLongitude();
+        ActivityLauncher.launch(this, ClientFormActivity.class, array);
     }
 }
