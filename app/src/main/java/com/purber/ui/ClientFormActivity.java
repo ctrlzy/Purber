@@ -2,6 +2,8 @@ package com.purber.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -20,6 +22,7 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.purber.AsyncResponse;
 import com.purber.MapActivity;
 import com.purber.controllers.ActivityLauncher;
+import com.purber.controllers.NotificationLauncher;
 import com.purber.rest.dto.LocationDto;
 import com.purber.rest.dto.OrderDto;
 import com.purber.www.purber.R;
@@ -164,6 +167,11 @@ public class ClientFormActivity extends ActionBarActivity implements AdapterView
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         ActivityLauncher.launch(_this, MapActivity.class, 0);
+
+                        //TODO, bring up notification directly, should happen after pull from server
+                        String title = getResources().getString(R.string.order_confirmed);
+                        String content = getResources().getString(R.string.order_id).replace("%1", "1234");   //FIX ME
+                        int nId = NotificationLauncher.launchNotification(_this, R.drawable.order, title, content, 2/* means order confirmed? */); //save notification id for future usage
                     }
                 });
             }
