@@ -9,4 +9,6 @@
     <string name="order">Order</string>
     <string name="sending_order">Sending Order...</string>
     <string name="sending_order_success">Order sent.</string>
+    <string name="order_confirmed">Order Confirmed.</string>
+    <string name="order_id">Order id: %1.</string>
 </resources>
