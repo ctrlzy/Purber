@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-import com.purber.MapActivity;
+import com.purber.ui.OrderConfirmActivity;
 
 /**
  * Created by Nicole on 15/7/27.
@@ -24,7 +24,7 @@ public class NotificationLauncher {
 
         builder.setAutoCancel(true);
 
-        Intent intent = new Intent(context, MapActivity.class);
+        Intent intent = new Intent(context, OrderConfirmActivity.class);
         intent.putExtra(ActivityLauncher.EXTRA_KEY, extra);
 
         // The stack builder object will contain an artificial back stack for the
@@ -33,7 +33,7 @@ public class NotificationLauncher {
         // your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(MapActivity.class);
+        stackBuilder.addParentStack(OrderConfirmActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(intent);
         PendingIntent resultPendingIntent =
