@@ -11,4 +11,6 @@
     <string name="sending_order_success">Order sent.</string>
     <string name="order_confirmed">Order Confirmed.</string>
     <string name="order_id">Order id: %1.</string>
+    <string name="OK">OK</string>
+    <string name="title_activity_order_confirm">OrderConfirmActivity</string>
 </resources>

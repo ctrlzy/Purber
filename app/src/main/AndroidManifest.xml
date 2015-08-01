@@ -33,6 +33,16 @@
             android:name="com.purber.ui.ClientFormActivity"
             android:label="@string/title_activity_client_form" >
         </activity>
+        <activity
+            android:name="com.purber.ui.OrderConfirmActivity"
+            android:label="@string/title_activity_order_confirm" >
+        </activity>
+
+        <service
+            android:name="com.purber.service.PullOrderService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
